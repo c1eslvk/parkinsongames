@@ -1,0 +1,107 @@
+[gd_scene load_steps=5 format=3 uid="uid://cwaegxx8wpxm7"]
+
+[ext_resource type="Script" path="res://scripts/shapesgame/ShapesGame.gd" id="1_1wn0o"]
+[ext_resource type="Texture2D" uid="uid://df7icxs61l6q5" path="res://assets/Sprites.png" id="6_kx3op"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_s6kas"]
+font_size = 40
+
+[sub_resource type="LabelSettings" id="LabelSettings_c7k4q"]
+font_size = 60
+
+[node name="Game" type="Node2D"]
+position = Vector2(960, 540)
+script = ExtResource("1_1wn0o")
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -960.0
+offset_top = -540.0
+offset_right = 960.0
+offset_bottom = 540.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CorrectLabel" type="Label" parent="UI"]
+layout_mode = 0
+offset_left = 47.0
+offset_top = 28.0
+offset_right = 136.0
+offset_bottom = 54.0
+text = "Correct: 0"
+
+[node name="IncorrectLabel" type="Label" parent="UI"]
+layout_mode = 0
+offset_left = 140.0
+offset_top = 28.0
+offset_right = 228.0
+offset_bottom = 51.0
+text = "Incorrect: 0"
+
+[node name="GameModeLabel" type="Label" parent="UI"]
+layout_mode = 0
+offset_left = 878.0
+offset_top = 637.0
+offset_right = 1067.0
+offset_bottom = 750.0
+text = "Group by: 
+SHAPE"
+label_settings = SubResource("LabelSettings_s6kas")
+horizontal_alignment = 1
+
+[node name="TimeLabel" type="Label" parent="UI"]
+layout_mode = 0
+offset_left = 46.0
+offset_top = 3.0
+offset_right = 247.0
+offset_bottom = 26.0
+text = "Time: 0ms (Previous: 0ms)"
+
+[node name="SpaceToStart" type="Label" parent="UI"]
+layout_mode = 0
+offset_left = 686.0
+offset_top = 278.0
+offset_right = 1259.0
+offset_bottom = 361.0
+text = "Press Space to Start"
+label_settings = SubResource("LabelSettings_c7k4q")
+
+[node name="LeftShape" type="Sprite2D" parent="."]
+position = Vector2(-819, 20)
+scale = Vector2(10, 10)
+texture = ExtResource("6_kx3op")
+region_enabled = true
+region_rect = Rect2(95, 24, 16, 16)
+
+[node name="TopShape" type="Sprite2D" parent="."]
+position = Vector2(92.0001, -443)
+scale = Vector2(10, 10)
+texture = ExtResource("6_kx3op")
+region_enabled = true
+region_rect = Rect2(131, 5, 15, 16)
+
+[node name="RightShape" type="Sprite2D" parent="."]
+position = Vector2(818, -15.9999)
+scale = Vector2(10, 10)
+texture = ExtResource("6_kx3op")
+region_enabled = true
+region_rect = Rect2(77, 61, 16, 17)
+
+[node name="BottomShape" type="Sprite2D" parent="."]
+position = Vector2(135, 402)
+scale = Vector2(10, 10)
+texture = ExtResource("6_kx3op")
+region_enabled = true
+region_rect = Rect2(113, 43, 16, 16)
+
+[node name="RandomShape" type="Sprite2D" parent="."]
+position = Vector2(-4.76837e-07, 4.29153e-06)
+scale = Vector2(10, 10)
+texture = ExtResource("6_kx3op")
+region_enabled = true
+region_rect = Rect2(131, 24, 15, 16)

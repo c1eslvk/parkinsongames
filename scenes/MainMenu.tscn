@@ -1,0 +1,107 @@
+[gd_scene load_steps=8 format=3 uid="uid://dhj4sjhy4khab"]
+
+[ext_resource type="Script" path="res://scripts/MainMenu.gd" id="1_uehc5"]
+[ext_resource type="Texture2D" uid="uid://dgdioqmw3ejhu" path="res://assets/UI/Background/background_back.png" id="2_fht1e"]
+[ext_resource type="Texture2D" uid="uid://cct4vpnqppl1f" path="res://assets/UI/Background/background_mid.png" id="3_oc3d1"]
+[ext_resource type="Script" path="res://scripts/UI/mid.gd" id="4_88ggx"]
+[ext_resource type="Texture2D" uid="uid://cepsobuhy52ah" path="res://assets/UI/Background/background_front.png" id="4_lv71g"]
+[ext_resource type="Script" path="res://scripts/UI/front.gd" id="5_lskbu"]
+[ext_resource type="Theme" uid="uid://bmt8fbqrwp17u" path="res://themes/default_button.tres" id="7_qmvvi"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_uehc5")
+
+[node name="Background" type="Node2D" parent="."]
+position = Vector2(963, 537)
+scale = Vector2(4.445, 4.445)
+
+[node name="Back" type="Sprite2D" parent="Background"]
+texture_filter = 1
+texture = ExtResource("2_fht1e")
+
+[node name="Mid" type="Sprite2D" parent="Background"]
+texture_filter = 1
+texture = ExtResource("3_oc3d1")
+script = ExtResource("4_88ggx")
+
+[node name="Front" type="Sprite2D" parent="Background"]
+texture_filter = 1
+texture = ExtResource("4_lv71g")
+script = ExtResource("5_lskbu")
+
+[node name="ArrowGameButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -375.0
+offset_right = 150.0
+offset_bottom = -225.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("7_qmvvi")
+text = "Arrow Game
+"
+
+[node name="ShapesGameButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -175.0
+offset_right = 150.0
+offset_bottom = -25.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("7_qmvvi")
+text = "Shapes Game"
+
+[node name="MathematicalMazeButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = 25.0
+offset_right = 150.0
+offset_bottom = 175.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("7_qmvvi")
+text = "Mathematical Maze"
+
+[node name="ExitButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = 225.0
+offset_right = 150.0
+offset_bottom = 375.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("7_qmvvi")
+text = "Exit
+"
+
+[connection signal="pressed" from="ArrowGameButton" to="." method="_on_arrow_game_button_pressed"]
+[connection signal="pressed" from="ShapesGameButton" to="." method="_on_shapes_game_button_pressed"]
+[connection signal="pressed" from="MathematicalMazeButton" to="." method="_on_mathematical_maze_button_pressed"]
+[connection signal="pressed" from="ExitButton" to="." method="_on_exit_button_pressed"]

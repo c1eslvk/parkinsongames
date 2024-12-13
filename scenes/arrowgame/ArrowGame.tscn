@@ -1,0 +1,66 @@
+[gd_scene load_steps=7 format=3 uid="uid://0l44l31k4fyx"]
+
+[ext_resource type="Script" path="res://scripts/arrowgame/ArrowGame.gd" id="1_0xfm5"]
+[ext_resource type="Shader" path="res://themes/arrowbackground.gdshader" id="2_8id6u"]
+[ext_resource type="Texture2D" uid="uid://df7icxs61l6q5" path="res://assets/Sprites.png" id="2_hfsme"]
+[ext_resource type="Theme" uid="uid://byvh5xeqcxvw2" path="res://themes/default_label.tres" id="3_2yo2f"]
+[ext_resource type="Texture2D" uid="uid://b2gcj8aryg6k0" path="res://assets/UI/Background/ArrowBackground.png" id="3_rphjx"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3ksex"]
+shader = ExtResource("2_8id6u")
+shader_parameter/SPEED = 0.5
+
+[node name="Game" type="Node2D"]
+position = Vector2(960, 540)
+script = ExtResource("1_0xfm5")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+modulate = Color(0.847474, 0.847474, 0.847474, 1)
+material = SubResource("ShaderMaterial_3ksex")
+offset_left = -1002.0
+offset_top = -571.0
+offset_right = 1043.0
+offset_bottom = 615.0
+texture = ExtResource("3_rphjx")
+stretch_mode = 1
+
+[node name="ArrowSprite" type="Sprite2D" parent="."]
+position = Vector2(0, -3.8147e-06)
+scale = Vector2(17.5454, 17.5454)
+texture = ExtResource("2_hfsme")
+region_enabled = true
+region_rect = Rect2(7, 3, 14, 11)
+
+[node name="StartMessage" type="Label" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -334.0
+offset_top = -22.0
+offset_right = 223.0
+offset_bottom = 22.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.225, 1.225)
+theme = ExtResource("3_2yo2f")
+text = "Press Space to Play"
+
+[node name="CountdownLabel" type="Label" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -79.0
+offset_top = -90.0
+offset_right = -39.0
+offset_bottom = -46.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(4, 4)
+theme = ExtResource("3_2yo2f")
+text = "3"
+horizontal_alignment = 1
+vertical_alignment = 1

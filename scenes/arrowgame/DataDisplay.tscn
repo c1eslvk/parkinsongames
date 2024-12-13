@@ -1,0 +1,32 @@
+[gd_scene load_steps=2 format=3 uid="uid://5bn55rlwd2hr"]
+
+[ext_resource type="Script" path="res://scripts/arrowgame/DataDisplay.gd" id="1_1s576"]
+
+[node name="DataDisplay" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_1s576")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 0
+offset_left = 1327.0
+offset_top = 134.0
+offset_right = 1755.0
+offset_bottom = 961.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 13.0
+offset_top = 12.0
+offset_right = 58.0
+offset_bottom = 43.0
+text = "Back"
+
+[connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]

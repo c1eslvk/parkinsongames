@@ -1,0 +1,41 @@
+[gd_scene load_steps=2 format=3 uid="uid://dnbv4sramivhy"]
+
+[ext_resource type="Script" path="res://scripts/FileManager.gd" id="1_704lm"]
+
+[node name="FileManager" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_704lm")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 0
+offset_left = 473.0
+offset_top = 142.0
+offset_right = 1053.0
+offset_bottom = 690.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 10.0
+offset_right = 57.0
+offset_bottom = 41.0
+text = "Back"
+
+[node name="OpenDirButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 10.0
+offset_right = 173.0
+offset_bottom = 41.0
+text = "Open Folder"
+
+[connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="OpenDirButton" to="." method="_on_open_dir_button_pressed"]

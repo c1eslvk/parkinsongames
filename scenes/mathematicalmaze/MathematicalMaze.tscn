@@ -1,0 +1,115 @@
+[gd_scene load_steps=7 format=3 uid="uid://cfgelllwn578i"]
+
+[ext_resource type="Texture2D" uid="uid://cltd42wuqdbap" path="res://assets/mathematicalmaze/Doors.svg" id="1_a6l7d"]
+[ext_resource type="Script" path="res://scripts/mathematicalmaze/MathematicalMaze.gd" id="1_kdk5h"]
+[ext_resource type="Texture2D" uid="uid://tpurmbvqkui" path="res://assets/mathematicalmaze/Player.svg" id="2_8v8s6"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_nwsxu"]
+font_size = 50
+font_color = Color(0, 0, 0, 1)
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_akeml"]
+font_size = 25
+
+[sub_resource type="LabelSettings" id="LabelSettings_yvcla"]
+font_size = 25
+
+[node name="Game" type="Node2D"]
+script = ExtResource("1_kdk5h")
+
+[node name="DoorsUp" type="Sprite2D" parent="."]
+position = Vector2(947.25, 107.332)
+scale = Vector2(0.60307, 0.60307)
+texture = ExtResource("1_a6l7d")
+
+[node name="Answer" type="Label" parent="DoorsUp"]
+offset_left = -93.0
+offset_top = -137.0
+offset_right = 104.0
+offset_bottom = -68.0
+text = "4
+"
+label_settings = SubResource("LabelSettings_nwsxu")
+horizontal_alignment = 1
+
+[node name="DoorsBottom" type="Sprite2D" parent="."]
+position = Vector2(947.25, 975)
+scale = Vector2(0.60307, 0.60307)
+texture = ExtResource("1_a6l7d")
+
+[node name="Answer" type="Label" parent="DoorsBottom"]
+offset_left = -95.0
+offset_top = -134.0
+offset_right = 97.0
+offset_bottom = -65.0
+text = "6"
+label_settings = SubResource("LabelSettings_nwsxu")
+horizontal_alignment = 1
+
+[node name="DoorsLeft" type="Sprite2D" parent="."]
+position = Vector2(69, 527)
+scale = Vector2(0.60307, 0.60307)
+texture = ExtResource("1_a6l7d")
+
+[node name="Answer" type="Label" parent="DoorsLeft"]
+offset_left = -101.0
+offset_top = -137.0
+offset_right = 99.0
+offset_bottom = -68.0
+text = "3"
+label_settings = SubResource("LabelSettings_nwsxu")
+horizontal_alignment = 1
+
+[node name="DoorsRight" type="Sprite2D" parent="."]
+position = Vector2(1850, 527)
+scale = Vector2(0.60307, 0.60307)
+texture = ExtResource("1_a6l7d")
+
+[node name="Answer" type="Label" parent="DoorsRight"]
+offset_left = -96.0
+offset_top = -137.0
+offset_right = 95.0
+offset_bottom = -68.0
+text = "5"
+label_settings = SubResource("LabelSettings_nwsxu")
+horizontal_alignment = 1
+
+[node name="Player" type="Sprite2D" parent="."]
+position = Vector2(950, 504)
+scale = Vector2(0.594737, 0.594737)
+texture = ExtResource("2_8v8s6")
+
+[node name="Equation" type="Label" parent="."]
+offset_left = 855.0
+offset_top = 337.0
+offset_right = 1044.0
+offset_bottom = 406.0
+text = "2 + 2
+"
+label_settings = SubResource("LabelSettings_nwsxu")
+horizontal_alignment = 1
+
+[node name="CorrectLabel" type="Label" parent="."]
+offset_left = 24.0
+offset_top = 46.0
+offset_right = 141.0
+offset_bottom = 81.0
+text = "Correct: 0"
+label_settings = SubResource("LabelSettings_akeml")
+
+[node name="IncorrectLabel" type="Label" parent="."]
+offset_left = 170.0
+offset_top = 45.0
+offset_right = 307.0
+offset_bottom = 80.0
+text = "Incorrect: 0"
+label_settings = SubResource("LabelSettings_akeml")
+
+[node name="TimeLabel" type="Label" parent="."]
+offset_left = 25.0
+offset_top = 8.0
+offset_right = 338.0
+offset_bottom = 43.0
+text = "Time: 0ms (Previous: 0ms)"
+label_settings = SubResource("LabelSettings_yvcla")
