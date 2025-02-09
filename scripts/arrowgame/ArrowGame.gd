@@ -4,9 +4,13 @@ enum Directions { UP, DOWN, LEFT, RIGHT }
 
 var NUM_OF_ROUNDS = 5
 
+@onready var screen_border_effect = $ScreenBorderEffect
+@onready var screen_border_animation = $ScreenBorderAnimation
+
 @onready var arrow_sprite = $ArrowSprite
 @onready var start_message = $StartMessage
 @onready var countdown_label = $CountdownLabel
+@onready var rules_label = $Rules
 var current_direction = Directions.UP
 var is_green_arrow = true
 var start_time = 0.0
@@ -35,10 +39,11 @@ var arrow_regions = {
 
 func _ready():
 	randomize()
+	setup_log_file()
 	start_message.visible = true
+	rules_label.visible = true
 	arrow_sprite.visible = false
 	countdown_label.visible = false
-	setup_log_file()
 
 func generate_new_direction():
 	current_direction = randi() % 4
@@ -56,6 +61,7 @@ func _process(delta):
 		if Input.is_action_just_pressed("ui_accept"):
 			game_started = true
 			start_message.visible = false
+			rules_label.visible = false
 			arrow_sprite.visible = true
 			start_countdown()
 			generate_new_direction()
@@ -74,18 +80,22 @@ func _process(delta):
 	if is_green_arrow:
 		if Input.is_action_just_pressed("ui_up") and current_direction == Directions.UP:
 			add_correct_point()
+			animate_border(true)
 			log_entry("up", "green", "correct")
 			input_pressed = true
 		elif Input.is_action_just_pressed("ui_down") and current_direction == Directions.DOWN:
 			add_correct_point()
+			animate_border(true)
 			log_entry("down", "green", "correct")
 			input_pressed = true
 		elif Input.is_action_just_pressed("ui_left") and current_direction == Directions.LEFT:
 			add_correct_point()
+			animate_border(true)
 			log_entry("left", "green", "correct")
 			input_pressed = true
 		elif Input.is_action_just_pressed("ui_right") and current_direction == Directions.RIGHT:
 			add_correct_point()
+			animate_border(true)
 			log_entry("right", "green", "correct")
 			input_pressed = true
 		else:
@@ -93,18 +103,22 @@ func _process(delta):
 	else:
 		if Input.is_action_just_pressed("ui_up") and current_direction == Directions.DOWN:
 			add_correct_point()
+			animate_border(true)
 			log_entry("up", "red", "correct")
 			input_pressed = true
 		elif Input.is_action_just_pressed("ui_down") and current_direction == Directions.UP:
 			add_correct_point()
+			animate_border(true)
 			log_entry("down", "red", "correct")
 			input_pressed = true
 		elif Input.is_action_just_pressed("ui_left") and current_direction == Directions.RIGHT:
 			add_correct_point()
+			animate_border(true)
 			log_entry("left", "red", "correct")
 			input_pressed = true
 		elif Input.is_action_just_pressed("ui_right") and current_direction == Directions.LEFT:
 			add_correct_point()
+			animate_border(true)
 			log_entry("right", "red", "correct")
 			input_pressed = true
 		else:
@@ -114,7 +128,10 @@ func _process(delta):
 		start_countdown()
 
 	if (Globals.correct_score + Globals.incorrect_score) == NUM_OF_ROUNDS:
+		is_timing = false
+		countdown_label.visible = false
 		save_log_to_file()
+		await get_tree().create_timer(0.5).timeout
 		get_tree().change_scene_to_file("res://scenes/EndScene.tscn")
 
 	if Input.is_action_just_pressed("ui_cancel"):
@@ -132,6 +149,7 @@ func add_incorrect_point():
 func check_incorrect_input() -> bool:
 	if Input.is_action_just_pressed("ui_up") or Input.is_action_just_pressed("ui_down") or Input.is_action_just_pressed("ui_left") or Input.is_action_just_pressed("ui_right"):
 		add_incorrect_point()
+		animate_border(false)
 		log_entry(get_direction(), get_arrow_color(), "incorrect")
 		return true
 	return false
@@ -163,13 +181,13 @@ func start_countdown() -> void:
 func setup_log_file():
 	var current_date = Time.get_datetime_string_from_system(false)
 	current_date = current_date.replace(":", "").replace("-", "")
-	log_file_name = Globals.username + "_" + current_date + ".txt"
+	log_file_name = Globals.username + "_" + current_date + ".csv"
 
 func save_log_to_file():
 	var file_path = "user://arrowgame_data/" + log_file_name
 	var file = FileAccess.open(file_path, FileAccess.WRITE)
 	if file:
-		file.store_line("No.|direction|color|answer|time")
+		file.store_line("Number;Direction;Color;Answer;Time")
 		for entry in log_entries:
 			file.store_line(entry)
 		file.close()
@@ -180,7 +198,7 @@ func save_log_to_file():
 	
 func log_entry(direction: String, color: String, answer: String):
 	var reaction_time = Time.get_ticks_msec() - start_time
-	var entry = str(log_entries.size() + 1) + "|" + direction + "|" + color + "|" + answer + "|" + str(reaction_time)
+	var entry = str(log_entries.size() + 1) + ";" + direction + ";" + color + ";" + answer + ";" + str(reaction_time)
 	log_entries.append(entry)
 
 func get_direction() -> String:
@@ -196,3 +214,11 @@ func get_direction() -> String:
 
 func get_arrow_color() -> String:
 	return "green" if is_green_arrow else "red"
+	
+func animate_border(is_correct: bool) -> void:
+	# Set the border color based on whether the answer was correct
+	var target_color = Color(0, 1, 0, 1) if is_correct else Color(1, 0, 0, 1)
+	screen_border_effect.color = target_color
+	
+	# Play the animation
+	screen_border_animation.play("BorderFlash")

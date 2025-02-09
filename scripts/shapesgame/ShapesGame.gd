@@ -14,9 +14,13 @@ var is_timing = false
 var log_entries = []
 var log_file_name = ""
 
+@onready var screen_border_effect = $ScreenBorderEffect
+@onready var screen_border_animation = $ScreenBorderAnimation
+
 @onready var gamemode_label = $UI/GameModeLabel
 @onready var random_shape = $RandomShape
 @onready var space_to_start_label = $UI/StartMessage
+@onready var rules_label = $UI/Rules
 @onready var countdown_label = $UI/CountdownLabel
 @onready var side_shapes = {
 	"top": $TopShape,
@@ -94,7 +98,7 @@ func set_shape_region(shape: String, color: String, side: String):
 func setup_log_file():
 	var current_date = Time.get_datetime_string_from_system(false)
 	current_date = current_date.replace(":", "").replace("-", "")
-	log_file_name = Globals.username + "_" + current_date + ".txt"
+	log_file_name = Globals.username + "_" + current_date + ".csv"
 	
 func setup_game():
 	current_shape = shapes[randi() % shapes.size()]
@@ -133,8 +137,10 @@ func handle_input(direction):
 
 	if is_correct:
 		Globals.correct_score += 1
+		animate_border(true)
 	else:
 		Globals.incorrect_score += 1
+		animate_border(false)
 
 	# Calculate reaction time
 	var reaction_time = Time.get_ticks_msec() - start_time
@@ -155,6 +161,7 @@ func _input(event):
 		if event.is_action_pressed("ui_select"):  # Space bar pressed
 			game_started = true
 			space_to_start_label.hide()
+			rules_label.hide()
 			random_shape.visible = true
 			start_countdown()
 		elif event.is_action_pressed("ui_cancel"):  # Escape button
@@ -203,12 +210,13 @@ func start_countdown() -> void:
 func display_start_prompt():
 	gamemode_label.text = ""
 	space_to_start_label.show()
+	rules_label.show()
 
 func save_log_to_file():
 	var file_path = "user://shapesgame_data/" + log_file_name
 	var file = FileAccess.open(file_path, FileAccess.WRITE)
 	if file:
-		file.store_line("No.|shape|color|gamemode|answer|time(ms)")
+		file.store_line("Number;Shape;Color;Gamemode;Answer;time(ms)")
 		for entry in log_entries:
 			file.store_line(entry)
 		file.close()
@@ -218,9 +226,20 @@ func save_log_to_file():
 		print("Failed to save log file")
 
 func log_entry(shape: String, color: String, answer: String, time: int):
-	var entry = "%d|%s|%s|%s|%s|%dms" % [log_entries.size() + 1, shape, color, current_gamemode, answer, time]
+	var entry = "%d;%s;%s;%s;%s;%dms" % [log_entries.size() + 1, shape, color, current_gamemode, answer, time]
 	log_entries.append(entry)
 
 func end_game():
+	countdown_label.visible = false
+	is_timing = false
 	save_log_to_file()
+	await get_tree().create_timer(0.5).timeout
 	get_tree().change_scene_to_file("res://scenes/EndScene.tscn")
+	
+func animate_border(is_correct: bool) -> void:
+	# Set the border color based on whether the answer was correct
+	var target_color = Color(0, 1, 0, 1) if is_correct else Color(1, 0, 0, 1)
+	screen_border_effect.color = target_color
+	
+	# Play the animation
+	screen_border_animation.play("BorderFlash")
