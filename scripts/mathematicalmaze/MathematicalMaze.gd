@@ -51,35 +51,37 @@ func setup_log_file():
 	current_date = current_date.replace(":", "").replace("-", "")
 	log_file_name = Globals.username + "_" + current_date + ".csv"
 
+# function generating new round
 func generate_round():
 	is_input_enabled = true
-	current_door_index = -1  # Reset selected door
-	character.position = Vector2(0, -40)  # Reset player to center of the room
-	character.play("stand")  # Play standing animation
-
+	# reset selected door
+	current_door_index = -1 
+	# reseting player position to center of room
+	character.position = Vector2(0, -40)
+	# playing idle animation
+	character.play("stand")
+	# checking if number of round reached MAX_ROUNDS
 	if total_rounds >= MAX_ROUNDS:
 		end_game()
 		return
-
 	total_rounds += 1
 	round_start_time = Time.get_ticks_msec()
-	
-	# Generate equation
+	# generate equation
 	var num1 = randi() % 10 + 1
 	var num2 = randi() % 10 + 1
+	# choose if addition of subtraction
 	var is_addition = randi() % 2 == 0
-
 	correct_answer = num1 + num2 if is_addition else num1 - num2
 	equation_label.text = str(num1) + (" + " if is_addition else " - ") + str(num2)
-
-	# Shuffle answers
+	# generate wrong answers and shuffle
 	var answers = [correct_answer]
 	while answers.size() < 4:
-		var random_answer = randi() % 20 - 5
+		var variation = randi() % 9 -4
+		var random_answer = correct_answer + variation
 		if random_answer not in answers and random_answer >= 0:
 			answers.append(random_answer)
 	answers.shuffle()
-
+	#assign answer to doors
 	for i in range(doors.size()):
 		var answer_label = doors[i].get_node_or_null("Answer")
 		if answer_label:
@@ -87,38 +89,35 @@ func generate_round():
 		else:
 			print("error. missing answer node in door")
 
+# handle input
 func check_answer(selected_index):
 	if not is_input_enabled: return
-	
 	var selected_door = doors[selected_index]
 	var answer_label = selected_door.get_node_or_null("Answer")
 	if answer_label:
 		var selected_answer = int(answer_label.text)
-		var time_taken = Time.get_ticks_msec() - round_start_time  # Calculate time taken
-
-		# Update scores
+		var time_taken = Time.get_ticks_msec() - round_start_time
+		# check answer and assign score
 		if selected_answer == correct_answer:
 			Globals.correct_score += 1
 			animate_border(true)
 		else:
 			Globals.incorrect_score += 1
 			animate_border(false)
-		
 		# Log the entry
 		log_entry(equation_label.text, str(selected_answer), time_taken)
-	
-	is_input_enabled = false  # Lock input during the movement
+	# lock input during movement
+	is_input_enabled = false
 	current_door_index = selected_index
 	var target_position = door_positions[selected_index]
-
-	# Move the character toward the door
+	# execute moving animation
 	move_character_to_door(target_position)
 
+# animating player to chosen door
 func move_character_to_door(target_position: Vector2):
-	# Determine direction and play correct animation
+	# determine direction and play correct animation
 	var direction = (target_position - character.position).normalized()
 	equation_label.visible = false
-
 	if abs(direction.x) > abs(direction.y):
 		if direction.x > 0:
 			character.play("walk_right")
@@ -129,38 +128,36 @@ func move_character_to_door(target_position: Vector2):
 			character.play("walk_down")
 		else:
 			character.play("walk_up")
-
 	# Use Tween to move the character
 	var tween = create_tween()
-	tween.tween_property(character, "position", target_position, 1.5)  # Adjust time for speed
+	tween.tween_property(character, "position", target_position, 1.5)
 	tween.finished.connect(_on_character_reached_door)
 
+# handinling reaching door
 func _on_character_reached_door():
 	character.visible = false
-
 	var selected_door = doors[current_door_index]
 	var answer_label = selected_door.get_node_or_null("Answer")
 	if answer_label:
 		open_door(selected_door, answer_label)
 
+# handling animation of opening the door
 func open_door(door: Sprite2D, answer_label: Label):
 	# Open the door
 	door.region_enabled = true
 	door.region_rect = Rect2(6, 116, 16, 28)
-	answer_label.visible = false  # Hide label
-
+	answer_label.visible = false
+	# connecting animating function
 	if timer.is_connected("timeout", Callable(self, "_on_character_entered_door")):
 		timer.disconnect("timeout", Callable(self, "_on_character_entered_door"))
-	
 	timer.connect("timeout", Callable(self, "_on_character_entered_door").bind(door, answer_label))
 	timer.start(1)
 
+# handling animation of walking in the door
 func _on_character_entered_door(door: Sprite2D, answer_label: Label):
-
 	# Close the door
 	door.region_rect = Rect2(24, 116, 16, 28)  # Closed door region
 	answer_label.visible = true  # Show label again
-
 	# Reset the round
 	timer.stop()
 	equation_label.visible = true

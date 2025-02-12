@@ -40,16 +40,16 @@ func load_and_display_graph(file_path: String):
 	display_graph(data)
 	
 func display_graph(data: Array):
+	var graph_points = []
+	# getting reaction times
 	var times = []
 	for row in data:
 		if row.size() >= times_index:
 			times.append(row[times_index - 1].to_int())
 	if times.is_empty():
 		return
-		
-	print("Parsed times: ", times)
-		
-	var graph_points = []
+	
+	# setting up boundaries of the graph and adding points
 	var max_y = -INF
 	for i in range(times.size()):
 		var x = i
@@ -57,7 +57,8 @@ func display_graph(data: Array):
 		if y > max_y:
 			max_y = y
 		graph_points.append(Vector2(x, y))
-
+	
+	# configuring and displaying graph
 	var graph = $Graph2D
 	graph.x_max = times.size()
 	graph.y_max = max_y + 100

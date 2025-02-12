@@ -1,0 +1,68 @@
+[gd_scene load_steps=9 format=3 uid="uid://5bn55rlwd2hr"]
+
+[ext_resource type="Script" path="res://scripts/DataDisplay.gd" id="1_1s576"]
+[ext_resource type="Texture2D" uid="uid://dgdioqmw3ejhu" path="res://assets/UI/Background/background_back.png" id="2_a0ajf"]
+[ext_resource type="Script" path="res://addons/graph_2d/graph_2d.gd" id="2_vgojt"]
+[ext_resource type="Texture2D" uid="uid://cct4vpnqppl1f" path="res://assets/UI/Background/background_mid.png" id="3_br3yq"]
+[ext_resource type="Script" path="res://scripts/UI/mid.gd" id="4_ncatp"]
+[ext_resource type="Texture2D" uid="uid://cepsobuhy52ah" path="res://assets/UI/Background/background_front.png" id="5_lgp7l"]
+[ext_resource type="Script" path="res://scripts/UI/front.gd" id="6_32coy"]
+[ext_resource type="Theme" uid="uid://bmt8fbqrwp17u" path="res://themes/default_button.tres" id="7_unkvg"]
+
+[node name="DataDisplay" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_1s576")
+
+[node name="Background" type="Node2D" parent="."]
+position = Vector2(963, 537)
+scale = Vector2(4.445, 4.445)
+
+[node name="Back" type="Sprite2D" parent="Background"]
+texture_filter = 1
+texture = ExtResource("2_a0ajf")
+
+[node name="Mid" type="Sprite2D" parent="Background"]
+texture_filter = 1
+texture = ExtResource("3_br3yq")
+script = ExtResource("4_ncatp")
+
+[node name="Front" type="Sprite2D" parent="Background"]
+texture_filter = 1
+texture = ExtResource("5_lgp7l")
+script = ExtResource("6_32coy")
+
+[node name="BackButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 22.0
+offset_right = 340.0
+offset_bottom = 172.0
+theme = ExtResource("7_unkvg")
+text = "Back"
+
+[node name="Graph2D" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 42.0
+offset_top = 199.0
+offset_right = -34.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_vgojt")
+x_label = "Round Number"
+y_min = -53.0
+y_max = 50.0
+y_label = "Time(ms)"
+background_color = Color(0.270222, 0.270222, 0.270222, 1)
+grid_horizontal_visible = true
+grid_vertical_visible = true
+
+[connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]

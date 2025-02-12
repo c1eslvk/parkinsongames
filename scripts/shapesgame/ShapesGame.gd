@@ -2,8 +2,8 @@ extends Node
 
 var shapes = ["Triangle", "Square", "Circle", "Star"]
 var colors = ["Red", "Green", "Blue", "Pink"]
-var is_input_enabled = false
 
+var is_input_enabled = false
 var start_time = 0.0
 var previous_time = 0.0
 var game_started = false
@@ -39,6 +39,7 @@ var incorrect_score = Globals.incorrect_score
 const MAX_ROUNDS = 5
 const SPRITESHEET_PATH = "res://assets/Sprites.png"
 
+# Shapes region in the sprite sheet
 var shape_color_regions = {
 	"Red Star": Rect2(77, 4, 16, 17),
 	"Green Star": Rect2(77, 23, 16, 17),
@@ -61,99 +62,92 @@ var shape_color_regions = {
 	"Pink Triangle": Rect2(131, 62, 15, 16)
 }
 
+# Function executed after loading scene
 func _ready() -> void:
 	setup_shapes()
 	setup_log_file()
 	random_shape.visible = false
 	countdown_label.visible = false
 	display_start_prompt()
-	
+
+# Function for setting up shapes on the sides of the screen
 func setup_shapes():
 	set_shape_region("Star", "Pink", "right")
 	set_shape_region("Triangle", "Red", "top")
 	set_shape_region("Circle", "Blue", "bottom")
 	set_shape_region("Square", "Green", "left")
-	
+
+# Function for setting up shapes region
 func set_shape_region(shape: String, color: String, side: String):
 	var key = "%s %s" % [color, shape]
 	if not shape_color_regions.has(key):
-		print("Invalid shape or color combination:", shape, color)
 		return
-
+	# getting regions of sprite
 	var region_rect = shape_color_regions[key]
 	var side_node = side_shapes[side]
-
+	# assigning sprite for shape
 	side_node.region_enabled = true
 	side_node.texture = load(SPRITESHEET_PATH)
 	side_node.region_rect = region_rect
-
 	# Set metadata for validation
 	side_node.set_meta("shape", shape)
 	side_node.set_meta("color", color)
 
-	# Debugging outputs
-	print("Set region for side '%s': Shape='%s', Color='%s', Region=%s" % [side, shape, color, region_rect])
-
-
+# Function prepating log file
 func setup_log_file():
 	var current_date = Time.get_datetime_string_from_system(false)
 	current_date = current_date.replace(":", "").replace("-", "")
 	log_file_name = Globals.username + "_" + current_date + ".csv"
-	
+
+# Funcion setting up current round
 func setup_game():
+	# choosing random shape
 	current_shape = shapes[randi() % shapes.size()]
 	current_color = colors[randi() % colors.size()]
-
 	var key = "%s %s" % [current_color, current_shape]
 	if not shape_color_regions.has(key):
-		print("Invalid shape or color combination:", current_shape, current_color)
 		return
-
+	# assigning sprite to node
 	var region_rect = shape_color_regions[key]
 	random_shape.region_enabled = true
 	random_shape.texture = load(SPRITESHEET_PATH)
 	random_shape.region_rect = region_rect
-
-	# Start reaction timer
+	# starting reaction timer
 	start_time = Time.get_ticks_msec()
-
+	# enabling input and increasing round counter
 	is_input_enabled = true
 	round_counter += 1
 
+# Function handling input
 func handle_input(direction):
 	if not is_input_enabled:
 		return
-
 	is_input_enabled = false
 	var target_shape = side_shapes[direction]
 	var is_correct = false
-
+	# check answer
 	if current_gamemode == "shape":
 		is_correct = target_shape.get_meta("shape") == current_shape
 	else:
 		is_correct = target_shape.get_meta("color") == current_color
-
 	var answer_text = "correct" if is_correct else "not correct"
-
+	# animate border
 	if is_correct:
 		Globals.correct_score += 1
 		animate_border(true)
 	else:
 		Globals.incorrect_score += 1
 		animate_border(false)
-
-	# Calculate reaction time
+	# calculate reaction time
 	var reaction_time = Time.get_ticks_msec() - start_time
 	previous_time = reaction_time
-
-	# Log the entry
+	# log the entry
 	log_entry(target_shape.get_meta("shape"), target_shape.get_meta("color"), answer_text, reaction_time)
-
+	# end game if MAX_ROUNDS reached
 	if round_counter >= MAX_ROUNDS:
-		end_game()  # Transition to EndScene
+		end_game()
 		return
-
-	# Start the next round
+	# start the next round
 	start_countdown()
 
 func _input(event):
@@ -207,6 +201,7 @@ func start_countdown() -> void:
 	random_shape.visible = false
 	run_countdown()
 
+# Function displaying starting message
 func display_start_prompt():
 	gamemode_label.text = ""
 	space_to_start_label.show()
@@ -229,17 +224,18 @@ func log_entry(shape: String, color: String, answer: String, time: int):
 	var entry = "%d;%s;%s;%s;%s;%dms" % [log_entries.size() + 1, shape, color, current_gamemode, answer, time]
 	log_entries.append(entry)
 
+# Function ending game after eaching MAX_ROUND
 func end_game():
 	countdown_label.visible = false
 	is_timing = false
 	save_log_to_file()
 	await get_tree().create_timer(0.5).timeout
 	get_tree().change_scene_to_file("res://scenes/EndScene.tscn")
-	
+
+# Function activating border animation
 func animate_border(is_correct: bool) -> void:
 	# Set the border color based on whether the answer was correct
 	var target_color = Color(0, 1, 0, 1) if is_correct else Color(1, 0, 0, 1)
 	screen_border_effect.color = target_color
-	
 	# Play the animation
 	screen_border_animation.play("BorderFlash")
